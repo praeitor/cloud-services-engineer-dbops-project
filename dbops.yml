@@ -1,0 +1,20 @@
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout репозиторий
+        uses: actions/checkout@v3
+
+      - name: Установка Flyway
+        run: |
+          curl -L https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/9.22.3/flyway-commandline-9.22.3-linux-x64.tar.gz | tar xvz
+          sudo mv flyway-9.22.3/flyway /usr/local/bin/
+
+      - name: Запуск миграции Flyway
+        run: |
+          flyway -url=jdbc:postgresql://${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/store \
+                 -user=${{ secrets.DB_USER }} \
+                 -password=${{ secrets.DB_PASSWORD }} \
+                 -locations=filesystem:./migrations \
+                 migrate
