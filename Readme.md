@@ -1,17 +1,26 @@
-# dbops-project
-Исходный репозиторий для выполнения проекта дисциплины "DBOps"
+# Проектная работа дисциплины DBOps
 
-
-## Создание пользователя PostgreSQL для автотестов и миграций
-
-Были выполнены следующие SQL-запросы:
-
+### Создаем базу данных
 ```sql
-CREATE USER dbops_user WITH PASSWORD 'secure_password';
-GRANT CONNECT ON DATABASE store TO dbops_user;
-GRANT USAGE ON SCHEMA public TO dbops_user;
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO dbops_user;
-ALTER DEFAULT PRIVILEGES IN SCHEMA public
-GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO dbops_user;
-GRANT CREATE, TEMP ON DATABASE store TO dbops_user;
-GRANT ALL ON SCHEMA public TO dbops_user;
+CREATE DATABASE store;
+```
+
+### Создаем пользователя для миграций и тестов и прдоставить нужные права
+```sql
+CREATE USER <your_user> WITH PASSWORD '<secure password>';
+GRANT ALL PRIVILEGES ON DATABASE store TO <your_user>;
+GRANT ALL PRIVILEGES ON SCHEMA public TO <your_user>;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO <your_user>;
+```
+
+### Делаем аналитический запрос в базу
+```sql
+SELECT o.date_created, SUM(op.quantity)
+FROM orders AS o
+    JOIN order_product AS op ON o.id = op.order_id
+WHERE o.status = 'shipped' AND o.date_created > NOW() - INTERVAL '7 DAY'
+GROUP BY o.date_created;
+```
+
+### Автор
+***Булгаков Денис***
