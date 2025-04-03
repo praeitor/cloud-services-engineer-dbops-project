@@ -13,12 +13,12 @@ GRANT ALL PRIVILEGES ON SCHEMA public TO <your_user>;
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO <your_user>;
 ```
 
-### Делаем аналитический запрос в базу
+### SQL-запрос, который показывает, какое количество сосисок было продано за предыдущую неделю
 ```sql
 SELECT o.date_created, SUM(op.quantity)
 FROM orders AS o
     JOIN order_product AS op ON o.id = op.order_id
-WHERE o.status = 'shipped' AND o.date_created > NOW() - INTERVAL '7 DAY'
+WHERE o.status = 'shipped' AND o.date_created > NOW() - INTERVAL '1 WEEK'
 GROUP BY o.date_created ORDER BY o.date_created desc;
 ```
 
